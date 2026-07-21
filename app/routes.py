@@ -1,11 +1,12 @@
 from fastapi import APIRouter
-from app.schemas import CategoryCreate, CategoryResponse, CategoryUpdate, ExpenseCreate, ExpenseResponse, ExpenseUpdate
+from app.schemas import CategoryCreate, CategoryResponse, CategoryUpdate, ExpenseCreate, ExpenseResponse, ExpenseUpdate,SummaryResponse,CategorySummary
 from app.database import get_db
 from app.models import Category,Expense
 from sqlalchemy.orm import Session
-from sqlalchemy import and_
+from sqlalchemy import and_,func
 from fastapi import HTTPException, status, Response, Depends
 from datetime import date
+from calendar import monthrange
 
 router = APIRouter()
 
@@ -256,3 +257,78 @@ def delete_expense(
 
     db.delete(expense)
     db.commit()
+
+@router.get("/summary", response_model=SummaryResponse)
+def get_summary(
+    month: str | None = None,
+    db: Session = Depends(get_db)
+):
+
+    if month is None:
+        raise HTTPException(
+            status_code=400,
+            detail="Month parameter is required. Use YYYY-MM format."
+        )
+
+    try:
+        year, month_number = map(int,month.split("-"))
+
+        start_date = date(year,month_number,1)
+
+        last_day = monthrange(year,month_number)[1]
+
+        end_date = date(year,month_number,last_day)
+
+    except Exception:
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid month format. Use YYYY-MM."
+        )
+
+    expenses = (
+        db.query(Expense)
+        .filter(
+            Expense.spent_on >= start_date,
+            Expense.spent_on <= end_date
+        )
+        .all()
+    )
+
+    total_spend = sum(
+        expense.amount
+        for expense in expenses
+    )
+
+    breakdown = {}
+
+    for expense in expenses:
+        category_name = expense.category.name
+
+        if category_name not in breakdown:
+            breakdown[category_name] = 0
+
+        breakdown[category_name] += expense.amount
+
+    result = []
+
+    for category, amount in breakdown.items():
+
+        percentage = (
+            (amount / total_spend) * 100
+            if total_spend > 0
+            else 0
+        )
+
+        result.append(
+            CategorySummary(
+                category_name=category,
+                total=amount,
+                percentage=round(percentage,2)
+            )
+        )
+
+    return SummaryResponse(
+        month=month,
+        total_spend=total_spend,
+        breakdown=result
+    )

@@ -43,3 +43,14 @@ class ExpenseResponse(BaseModel):
     model_config = {
         "from_attributes": True
     }
+
+class CategorySummary(BaseModel):
+    category_name: str
+    total: float
+    percentage: float
+
+
+class SummaryResponse(BaseModel):
+    month: str
+    total_spend: float
+    breakdown: list[CategorySummary]
