@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import strawberry
 from datetime import date
 
@@ -7,7 +9,7 @@ class ExpenseType:
     amount: float
     description: str | None
     spent_on: date
-    category: "CategoryType"
+    category: CategoryType
 
 @strawberry.type
 class CategoryType:
