@@ -11,11 +11,11 @@ from calendar import monthrange
 router = APIRouter()
 
 
-@router.get("/")
-def home():
-    return {
-        "message": "Expense Tracker API"
-    }
+# @router.get("/")
+# def home():
+#     return {
+#         "message": "Expense Tracker API"
+#     }
 
 # GET /categories
 @router.get("/categories", response_model=list[CategoryResponse])

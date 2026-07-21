@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Expense Tracker</title>
+
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+
+<body>
+
+    <div class="container">
+
+        <h1>Personal Expense Tracker</h1>
+
+        <!-- Add Expense Section -->
+        <section class="card">
+
+            <h2>Add Expense</h2>
+
+            <form id="expense-form">
+
+                <div class="form-group">
+                    <label>Amount</label>
+                    <input type="number" id="amount" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Description</label>
+                    <input type="text" id="description" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Date</label>
+                    <input type="date" id="spent_on" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="category" required></select>
+                </div>
+
+                <button type="submit">Add Expense</button>
+
+            </form>
+
+        </section>
+
+        <!-- Expenses Table -->
+        <section class="card">
+
+            <h2>Expenses</h2>
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Amount</th>
+                        <th>Description</th>
+                        <th>Date</th>
+                        <th>Category</th>
+                    </tr>
+                </thead>
+
+                <tbody id="expense-table-body"></tbody>
+
+            </table>
+
+        </section>
+
+        <!-- Summary Section -->
+        <section class="card">
+
+            <h2>Monthly Summary</h2>
+
+            <div id="summary">
+                <p>Loading summary...</p>
+            </div>
+
+        </section>
+
+    </div>
+
+    <script src="/static/script.js"></script>
+
+</body>
+
+</html>

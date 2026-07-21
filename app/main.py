@@ -1,27 +1,38 @@
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 
 from .database import Base, engine
 from .routes import router
-
-from strawberry.fastapi import GraphQLRouter
 from .graphql.schema import schema
 
-app = FastAPI(
-    title="Expense Tracker API"
-)
+from strawberry.fastapi import GraphQLRouter
 
+app = FastAPI()
 
-@app.on_event("startup")
-def startup():
-    Base.metadata.create_all(bind=engine)
+# Create tables
+Base.metadata.create_all(bind=engine)
 
+# REST routes
 app.include_router(router)
 
-
-
+# GraphQL route
 graphql_app = GraphQLRouter(schema)
-
 app.include_router(
     graphql_app,
     prefix="/graphql"
 )
+
+# Serve frontend files
+app.mount(
+    "/static",
+    StaticFiles(directory="app/static"),
+    name="static"
+)
+
+# Frontend entry point
+@app.get("/")
+def home():
+    return FileResponse(
+        "app/static/index.html"
+    )
