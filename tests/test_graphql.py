@@ -1,4 +1,6 @@
-def test_graphql_categories(client):
+from tests.conftest import client
+
+def test_graphql_categories():
 
     query="""
     query {
@@ -20,7 +22,7 @@ def test_graphql_categories(client):
     assert "data" in data
     assert "categories" in data["data"]
 
-def test_graphql_add_expense(client):
+def test_graphql_add_expense():
 
     mutation="""
     mutation {

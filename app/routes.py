@@ -272,11 +272,8 @@ def get_summary(
 
     try:
         year, month_number = map(int,month.split("-"))
-
         start_date = date(year,month_number,1)
-
         last_day = monthrange(year,month_number)[1]
-
         end_date = date(year,month_number,last_day)
 
     except Exception:

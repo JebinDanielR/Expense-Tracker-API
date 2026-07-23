@@ -1,6 +1,6 @@
-from fastapi.testclient import TestClient
+from tests.conftest import client
 
-def test_duplicate_category(client):
+def test_duplicate_category():
 
     client.post("/categories",
         json={

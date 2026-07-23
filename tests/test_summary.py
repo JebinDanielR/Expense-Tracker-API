@@ -1,6 +1,7 @@
 from fastapi.testclient import TestClient
+from tests.conftest import client
 
-def test_summary(client):
+def test_summary():
 
     response = client.get("/summary?month=2026-03")
 

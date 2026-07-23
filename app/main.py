@@ -32,6 +32,7 @@ app.mount(
 
 # Frontend entry point
 @app.get("/")
+@app.get("/expense-tracker")
 def home():
     return FileResponse(
         "app/static/index.html"
