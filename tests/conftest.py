@@ -62,6 +62,10 @@ def clean_database():
 
     yield
 
-    Base.metadata.drop_all(bind=engine)
+    db = TestingSessionLocal()
 
-    Base.metadata.create_all(bind=engine)
+    for table in reversed(Base.metadata.sorted_tables):
+        db.execute(table.delete())
+
+    db.commit()
+    db.close()
